@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Quiz Sistema Nervoso</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#eef2ff;
+text-align:center;
+padding:20px;
+}
+
+h1{
+font-size:36px;
+}
+
+.card{
+background:white;
+width:520px;
+margin:auto;
+padding:25px;
+border-radius:20px;
+box-shadow:0 6px 18px rgba(0,0,0,0.2);
+}
+
+img{
+width:220px;
+margin:10px;
+}
+
+button{
+font-size:20px;
+padding:12px;
+margin:8px;
+width:85%;
+border:none;
+border-radius:12px;
+cursor:pointer;
+}
+
+.answer{
+background:#dbe3ff;
+}
+
+.correct{
+background:#7ee081 !important;
+}
+
+.wrong{
+background:#ff9a9a !important;
+}
+
+.next{
+background:#ffd966;
+}
+
+#score{
+font-size:22px;
+margin-bottom:20px;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<h1>Quiz: Sistema Nervoso</h1>
+
+<div id="score">Punteggio: 0</div>
+
+<div class="card">
+
+<h2 id="question"></h2>
+
+<img id="image">
+
+<div id="answers"></div>
+
+<button class="next" onclick="nextQuestion()">Prossima domanda</button>
+
+</div>
+
+<script>
+
+let score=0
+let current=0
+
+const quiz=[
+
+{
+q:"Quale organo controlla e coordina il corpo?",
+img:"https://upload.wikimedia.org/wikipedia/commons/6/6b/Human_brain.png",
+a:["Il cervello","Il cuore","Il fegato"],
+c:0
+},
+
+{
+q:"Quale sistema coordina pensieri e movimenti?",
+img:"https://upload.wikimedia.org/wikipedia/commons/7/7d/Nervous_system_diagram_it.svg",
+a:["Sistema nervoso","Sistema digerente","Sistema circolatorio"],
+c:0
+},
+
+{
+q:"Come si chiamano le cellule del sistema nervoso?",
+img:"https://upload.wikimedia.org/wikipedia/commons/3/30/Complete_neuron_cell_diagram_it.svg",
+a:["Neuroni","Muscoli","Ossa"],
+c:0
+},
+
+{
+q:"Quale parte del neurone riceve gli stimoli?",
+img:"https://upload.wikimedia.org/wikipedia/commons/0/0c/Neuron_diagram_it.svg",
+a:["Dendriti","Assone","Sinapsi"],
+c:0
+},
+
+{
+q:"Quale parte del neurone trasporta l'impulso lontano dal corpo cellulare?",
+img:"https://upload.wikimedia.org/wikipedia/commons/0/0c/Neuron_diagram_it.svg",
+a:["Assone","Dendrite","Nucleo"],
+c:0
+},
+
+{
+q:"Che cosa è uno stimolo?",
+img:"https://upload.wikimedia.org/wikipedia/commons/2/2e/Human_skin_receptors.svg",
+a:["Un evento che provoca una risposta","Una parte del cervello","Un osso del corpo"],
+c:0
+},
+
+{
+q:"Quale parte collega cervello e corpo?",
+img:"https://upload.wikimedia.org/wikipedia/commons/3/34/Spinal_cord_cross_section_it.svg",
+a:["Midollo spinale","Fegato","Polmoni"],
+c:0
+},
+
+{
+q:"Il cervello fa parte di quale sistema?",
+img:"https://upload.wikimedia.org/wikipedia/commons/6/6b/Human_brain.png",
+a:["Sistema nervoso centrale","Sistema digerente","Sistema respiratorio"],
+c:0
+},
+
+{
+q:"Quale neurone porta informazioni dagli organi di senso al cervello?",
+img:"https://upload.wikimedia.org/wikipedia/commons/3/30/Complete_neuron_cell_diagram_it.svg",
+a:["Neurone sensoriale","Neurone motorio","Neurone muscolare"],
+c:0
+},
+
+{
+q:"Quale neurone porta i comandi ai muscoli?",
+img:"https://upload.wikimedia.org/wikipedia/commons/3/30/Complete_neuron_cell_diagram_it.svg",
+a:["Neurone motorio","Neurone sensoriale","Neurone digestivo"],
+c:0
+},
+
+{
+q:"Quale parte dell'encefalo regola i movimenti volontari?",
+img:"https://upload.wikimedia.org/wikipedia/commons/4/4f/Cerebellum.svg",
+a:["Cervelletto","Talamo","Ipotalamo"],
+c:0
+},
+
+{
+q:"Quale parte dell'encefalo controlla pensiero e linguaggio?",
+img:"https://upload.wikimedia.org/wikipedia/commons/6/6b/Human_brain.png",
+a:["Cervello","Midollo","Tendine"],
+c:0
+},
+
+{
+q:"Quale parte regola battito cardiaco e respirazione?",
+img:"https://upload.wikimedia.org/wikipedia/commons/0/0a/Brainstem_diagram.svg",
+a:["Midollo allungato","Cervelletto","Lobo frontale"],
+c:0
+},
+
+{
+q:"Che cosa sono i nervi?",
+img:"https://upload.wikimedia.org/wikipedia/commons/7/7d/Nervous_system_diagram_it.svg",
+a:["Fasci di assoni","Fasci di muscoli","Fasci di ossa"],
+c:0
+},
+
+{
+q:"Il sistema nervoso periferico collega:",
+img:"https://upload.wikimedia.org/wikipedia/commons/7/7d/Nervous_system_diagram_it.svg",
+a:["Sistema nervoso centrale e corpo","Cuore e polmoni","Muscoli e ossa"],
+c:0
+},
+
+{
+q:"Che cosa succede nell'arco riflesso?",
+img:"https://upload.wikimedia.org/wikipedia/commons/3/3b/Knee_jerk_reflex.svg",
+a:["La risposta è automatica","Serve per respirare","Serve per digerire"],
+c:0
+},
+
+{
+q:"Quale sistema accelera il battito cardiaco?",
+img:"https://upload.wikimedia.org/wikipedia/commons/7/7d/Nervous_system_diagram_it.svg",
+a:["Sistema simpatico","Sistema parasimpatico","Sistema digerente"],
+c:0
+},
+
+{
+q:"Quale sistema rallenta il battito cardiaco?",
+img:"https://upload.wikimedia.org/wikipedia/commons/7/7d/Nervous_system_diagram_it.svg",
+a:["Sistema parasimpatico","Sistema simpatico","Sistema muscolare"],
+c:0
+},
+
+{
+q:"Il sistema nervoso si divide in:",
+img:"https://upload.wikimedia.org/wikipedia/commons/7/7d/Nervous_system_diagram_it.svg",
+a:["Centrale e periferico","Respiratorio e digerente","Circolatorio e osseo"],
+c:0
+},
+
+{
+q:"Gli impulsi nervosi sono:",
+img:"https://upload.wikimedia.org/wikipedia/commons/0/0c/Neuron_diagram_it.svg",
+a:["Impulsi elettrici","Impulsi ossei","Impulsi muscolari"],
+c:0
+}
+
+]
+
+function loadQuestion(){
+
+let q=quiz[current]
+
+document.getElementById("question").innerText=q.q
+document.getElementById("image").src=q.img
+
+let answersHTML=""
+
+q.a.forEach((ans,i)=>{
+
+answersHTML+=`<button class="answer" onclick="selectAnswer(${i})">${ans}</button>`
+
+})
+
+document.getElementById("answers").innerHTML=answersHTML
+
+}
+
+function selectAnswer(i){
+
+let q=quiz[current]
+let buttons=document.querySelectorAll(".answer")
+
+if(i===q.c){
+buttons[i].classList.add("correct")
+score++
+}else{
+buttons[i].classList.add("wrong")
+buttons[q.c].classList.add("correct")
+}
+
+document.getElementById("score").innerText="Punteggio: "+score
+
+}
+
+function nextQuestion(){
+
+current++
+
+if(current>=quiz.length){
+
+alert("Quiz finito! Punteggio: "+score)
+
+current=0
+score=0
+
+}
+
+loadQuestion()
+
+}
+
+loadQuestion()
+
+</script>
+
+</body>
+</html>
