@@ -2,293 +2,258 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Quiz Sistema Nervoso</title>
+<title>Flashcard Sistema Nervoso</title>
 
 <style>
 
 body{
-font-family: Arial;
+font-family:Arial;
 background:#eef2ff;
 text-align:center;
-padding:20px;
+padding:30px;
 }
 
 h1{
-font-size:36px;
+font-size:32px;
+}
+
+.container{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:40px;
 }
 
 .card{
+width:380px;
+height:420px;
+perspective:1000px;
+}
+
+.inner{
+position:relative;
+width:100%;
+height:100%;
+transition:transform 0.8s;
+transform-style:preserve-3d;
+}
+
+.card.flip .inner{
+transform:rotateY(180deg);
+}
+
+.front,.back{
+position:absolute;
+width:100%;
+height:100%;
+backface-visibility:hidden;
 background:white;
-width:520px;
-margin:auto;
-padding:25px;
-border-radius:20px;
-box-shadow:0 6px 18px rgba(0,0,0,0.2);
+border-radius:18px;
+box-shadow:0 6px 15px rgba(0,0,0,0.2);
+padding:20px;
+}
+
+.back{
+transform:rotateY(180deg);
 }
 
 img{
-width:220px;
+width:180px;
 margin:10px;
 }
 
 button{
-font-size:20px;
-padding:12px;
-margin:8px;
-width:85%;
+font-size:18px;
+padding:10px;
+margin:6px;
 border:none;
-border-radius:12px;
+border-radius:10px;
 cursor:pointer;
+width:85%;
 }
 
 .answer{
 background:#dbe3ff;
 }
 
-.correct{
-background:#7ee081 !important;
+.answer:hover{
+background:#b8c8ff;
 }
 
-.wrong{
-background:#ff9a9a !important;
-}
-
-.next{
+.show{
 background:#ffd966;
 }
 
-#score{
-font-size:22px;
-margin-bottom:20px;
+.flipbtn{
+background:#9ad0ff;
+}
+
+.correct{
+font-size:20px;
+font-weight:bold;
+margin-top:10px;
+color:green;
 }
 
 </style>
+
 </head>
 
 
 <body>
 
-<h1>Quiz: Sistema Nervoso</h1>
+<h1>Flashcard – Sistema Nervoso</h1>
 
-<div id="score">Punteggio: 0</div>
+<div class="container">
 
-<div class="card">
+<!-- CARTA 1 -->
 
-<h2 id="question"></h2>
+<div class="card" id="card1">
 
-<img id="image">
+<div class="inner">
 
-<div id="answers"></div>
+<div class="front">
 
-<button class="next" onclick="nextQuestion()">Prossima domanda</button>
+<h2>Quale organo controlla il corpo?</h2>
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Human_brain.png">
+
+<br>
+
+<button class="flipbtn" onclick="flipCard('card1')">
+Vedi risposte
+</button>
 
 </div>
 
+
+<div class="back">
+
+<h3>Scegli la risposta</h3>
+
+<button class="answer">Cuore</button>
+<button class="answer">Cervello</button>
+<button class="answer">Polmoni</button>
+
+<br>
+
+<button class="show" onclick="showAnswer('a1','Cervello')">
+Mostra risposta corretta
+</button>
+
+<div id="a1" class="correct"></div>
+
+<button class="flipbtn" onclick="flipCard('card1')">
+Torna alla domanda
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- CARTA 2 -->
+
+<div class="card" id="card2">
+
+<div class="inner">
+
+<div class="front">
+
+<h2>Come si chiamano le cellule del sistema nervoso?</h2>
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Complete_neuron_cell_diagram_it.svg">
+
+<button class="flipbtn" onclick="flipCard('card2')">
+Vedi risposte
+</button>
+
+</div>
+
+
+<div class="back">
+
+<h3>Scegli la risposta</h3>
+
+<button class="answer">Neuroni</button>
+<button class="answer">Muscoli</button>
+<button class="answer">Ossa</button>
+
+<button class="show" onclick="showAnswer('a2','Neuroni')">
+Mostra risposta corretta
+</button>
+
+<div id="a2" class="correct"></div>
+
+<button class="flipbtn" onclick="flipCard('card2')">
+Torna alla domanda
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- CARTA 3 -->
+
+<div class="card" id="card3">
+
+<div class="inner">
+
+<div class="front">
+
+<h2>Quale parte collega cervello e corpo?</h2>
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/34/Spinal_cord_cross_section_it.svg">
+
+<button class="flipbtn" onclick="flipCard('card3')">
+Vedi risposte
+</button>
+
+</div>
+
+
+<div class="back">
+
+<h3>Scegli la risposta</h3>
+
+<button class="answer">Midollo spinale</button>
+<button class="answer">Stomaco</button>
+<button class="answer">Polmoni</button>
+
+<button class="show" onclick="showAnswer('a3','Midollo spinale')">
+Mostra risposta corretta
+</button>
+
+<div id="a3" class="correct"></div>
+
+<button class="flipbtn" onclick="flipCard('card3')">
+Torna alla domanda
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+</div>
+
+
 <script>
 
-let score=0
-let current=0
-
-const quiz=[
-
-{
-q:"Quale organo controlla e coordina il corpo?",
-img:"https://upload.wikimedia.org/wikipedia/commons/6/6b/Human_brain.png",
-a:["Il cervello","Il cuore","Il fegato"],
-c:0
-},
-
-{
-q:"Quale sistema coordina pensieri e movimenti?",
-img:"https://upload.wikimedia.org/wikipedia/commons/7/7d/Nervous_system_diagram_it.svg",
-a:["Sistema nervoso","Sistema digerente","Sistema circolatorio"],
-c:0
-},
-
-{
-q:"Come si chiamano le cellule del sistema nervoso?",
-img:"https://upload.wikimedia.org/wikipedia/commons/3/30/Complete_neuron_cell_diagram_it.svg",
-a:["Neuroni","Muscoli","Ossa"],
-c:0
-},
-
-{
-q:"Quale parte del neurone riceve gli stimoli?",
-img:"https://upload.wikimedia.org/wikipedia/commons/0/0c/Neuron_diagram_it.svg",
-a:["Dendriti","Assone","Sinapsi"],
-c:0
-},
-
-{
-q:"Quale parte del neurone trasporta l'impulso lontano dal corpo cellulare?",
-img:"https://upload.wikimedia.org/wikipedia/commons/0/0c/Neuron_diagram_it.svg",
-a:["Assone","Dendrite","Nucleo"],
-c:0
-},
-
-{
-q:"Che cosa è uno stimolo?",
-img:"https://upload.wikimedia.org/wikipedia/commons/2/2e/Human_skin_receptors.svg",
-a:["Un evento che provoca una risposta","Una parte del cervello","Un osso del corpo"],
-c:0
-},
-
-{
-q:"Quale parte collega cervello e corpo?",
-img:"https://upload.wikimedia.org/wikipedia/commons/3/34/Spinal_cord_cross_section_it.svg",
-a:["Midollo spinale","Fegato","Polmoni"],
-c:0
-},
-
-{
-q:"Il cervello fa parte di quale sistema?",
-img:"https://upload.wikimedia.org/wikipedia/commons/6/6b/Human_brain.png",
-a:["Sistema nervoso centrale","Sistema digerente","Sistema respiratorio"],
-c:0
-},
-
-{
-q:"Quale neurone porta informazioni dagli organi di senso al cervello?",
-img:"https://upload.wikimedia.org/wikipedia/commons/3/30/Complete_neuron_cell_diagram_it.svg",
-a:["Neurone sensoriale","Neurone motorio","Neurone muscolare"],
-c:0
-},
-
-{
-q:"Quale neurone porta i comandi ai muscoli?",
-img:"https://upload.wikimedia.org/wikipedia/commons/3/30/Complete_neuron_cell_diagram_it.svg",
-a:["Neurone motorio","Neurone sensoriale","Neurone digestivo"],
-c:0
-},
-
-{
-q:"Quale parte dell'encefalo regola i movimenti volontari?",
-img:"https://upload.wikimedia.org/wikipedia/commons/4/4f/Cerebellum.svg",
-a:["Cervelletto","Talamo","Ipotalamo"],
-c:0
-},
-
-{
-q:"Quale parte dell'encefalo controlla pensiero e linguaggio?",
-img:"https://upload.wikimedia.org/wikipedia/commons/6/6b/Human_brain.png",
-a:["Cervello","Midollo","Tendine"],
-c:0
-},
-
-{
-q:"Quale parte regola battito cardiaco e respirazione?",
-img:"https://upload.wikimedia.org/wikipedia/commons/0/0a/Brainstem_diagram.svg",
-a:["Midollo allungato","Cervelletto","Lobo frontale"],
-c:0
-},
-
-{
-q:"Che cosa sono i nervi?",
-img:"https://upload.wikimedia.org/wikipedia/commons/7/7d/Nervous_system_diagram_it.svg",
-a:["Fasci di assoni","Fasci di muscoli","Fasci di ossa"],
-c:0
-},
-
-{
-q:"Il sistema nervoso periferico collega:",
-img:"https://upload.wikimedia.org/wikipedia/commons/7/7d/Nervous_system_diagram_it.svg",
-a:["Sistema nervoso centrale e corpo","Cuore e polmoni","Muscoli e ossa"],
-c:0
-},
-
-{
-q:"Che cosa succede nell'arco riflesso?",
-img:"https://upload.wikimedia.org/wikipedia/commons/3/3b/Knee_jerk_reflex.svg",
-a:["La risposta è automatica","Serve per respirare","Serve per digerire"],
-c:0
-},
-
-{
-q:"Quale sistema accelera il battito cardiaco?",
-img:"https://upload.wikimedia.org/wikipedia/commons/7/7d/Nervous_system_diagram_it.svg",
-a:["Sistema simpatico","Sistema parasimpatico","Sistema digerente"],
-c:0
-},
-
-{
-q:"Quale sistema rallenta il battito cardiaco?",
-img:"https://upload.wikimedia.org/wikipedia/commons/7/7d/Nervous_system_diagram_it.svg",
-a:["Sistema parasimpatico","Sistema simpatico","Sistema muscolare"],
-c:0
-},
-
-{
-q:"Il sistema nervoso si divide in:",
-img:"https://upload.wikimedia.org/wikipedia/commons/7/7d/Nervous_system_diagram_it.svg",
-a:["Centrale e periferico","Respiratorio e digerente","Circolatorio e osseo"],
-c:0
-},
-
-{
-q:"Gli impulsi nervosi sono:",
-img:"https://upload.wikimedia.org/wikipedia/commons/0/0c/Neuron_diagram_it.svg",
-a:["Impulsi elettrici","Impulsi ossei","Impulsi muscolari"],
-c:0
+function flipCard(id){
+document.getElementById(id).classList.toggle("flip")
 }
 
-]
-
-function loadQuestion(){
-
-let q=quiz[current]
-
-document.getElementById("question").innerText=q.q
-document.getElementById("image").src=q.img
-
-let answersHTML=""
-
-q.a.forEach((ans,i)=>{
-
-answersHTML+=`<button class="answer" onclick="selectAnswer(${i})">${ans}</button>`
-
-})
-
-document.getElementById("answers").innerHTML=answersHTML
-
+function showAnswer(element,answer){
+document.getElementById(element).innerHTML="✅ Risposta corretta: "+answer
 }
-
-function selectAnswer(i){
-
-let q=quiz[current]
-let buttons=document.querySelectorAll(".answer")
-
-if(i===q.c){
-buttons[i].classList.add("correct")
-score++
-}else{
-buttons[i].classList.add("wrong")
-buttons[q.c].classList.add("correct")
-}
-
-document.getElementById("score").innerText="Punteggio: "+score
-
-}
-
-function nextQuestion(){
-
-current++
-
-if(current>=quiz.length){
-
-alert("Quiz finito! Punteggio: "+score)
-
-current=0
-score=0
-
-}
-
-loadQuestion()
-
-}
-
-loadQuestion()
 
 </script>
+
 
 </body>
 </html>
